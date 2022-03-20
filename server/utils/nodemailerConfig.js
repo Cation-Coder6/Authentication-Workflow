@@ -2,7 +2,7 @@ module.exports = {
   host: "smtp.ethereal.email",
   port: 587,
   auth: {
-    user: "rebeca.frami98@ethereal.email",
-    pass: "JSQ6Fq1ksprT9mS3Wk",
+    user: "leslie.osinski46@ethereal.email",
+    pass: "TACtukfStfpfGtvrRn",
   },
 };
