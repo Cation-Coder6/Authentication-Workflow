@@ -137,9 +137,38 @@ const logout = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "user logged out!" });
 };
 
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    throw new CustomError.BadRequestError("Please Provide Valid Email");
+  }
+
+  const user = await User.findOne({ email });
+
+  if (user) {
+    const passwordToken = crypto.randomBytes(70).toString("hex");
+
+    //send email;
+    const tenMinutes = 1000 * 60 * 10;
+    const passwordTokenExipirationDate = new Date(Date.now() + tenMinutes);
+
+    user.passwordToken = passwordToken;
+    user.passwordTokenExpirationDate = passwordTokenExipirationDate;
+
+    await user.save();
+  }
+  res.send("Forgot Password");
+};
+
+const resetPassword = async (req, res) => {
+  res.send("Reset Password");
+};
+
 module.exports = {
   register,
   login,
   logout,
   verifyEmail,
+  forgotPassword,
+  resetPassword,
 };
