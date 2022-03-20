@@ -6,6 +6,7 @@ const {
   attachCookiesToResponse,
   createTokenUser,
   sendVerificationEmail,
+  sendResetPasswordEmail,
 } = require("../utils");
 const crypto = require("crypto");
 
@@ -149,6 +150,14 @@ const forgotPassword = async (req, res) => {
     const passwordToken = crypto.randomBytes(70).toString("hex");
 
     //send email;
+    const origin = "http://localhost:3000";
+    await sendResetPasswordEmail({
+      name: user.name,
+      email: user.email,
+      token: passwordToken,
+      origin,
+    });
+
     const tenMinutes = 1000 * 60 * 10;
     const passwordTokenExipirationDate = new Date(Date.now() + tenMinutes);
 
@@ -157,7 +166,9 @@ const forgotPassword = async (req, res) => {
 
     await user.save();
   }
-  res.send("Forgot Password");
+  res
+    .status(StatusCodes.OK)
+    .json({ msg: "Please Check Your Email For Password Reset Link" });
 };
 
 const resetPassword = async (req, res) => {
